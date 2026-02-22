@@ -1,0 +1,24 @@
+.app {
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Move overview map to top-right */
+.ol-overviewmap {
+  top: 10px !important;
+  right: 10px !important;
+  bottom: auto !important;
+  left: auto !important;
+  border: 2px solid #444;
+}
+
+/* Resize overview map */
+.ol-overviewmap-map {
+  width: 200px !important;
+  height: 150px !important;
+}
+
+/* Optional: hide collapse button */
+.ol-overviewmap button {
+  display: none;
+}

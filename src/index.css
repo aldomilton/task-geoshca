@@ -1,0 +1,27 @@
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+/* Move overview map to top-right */
+.ol-overviewmap.ol-control {
+  top: 10px !important;
+  right: 10px !important;
+  bottom: auto !important;
+  left: auto !important;
+}
+
+/* Resize overview map */
+.ol-overviewmap-map {
+  width: 200px !important;
+  height: 150px !important;
+}
+
+/* Optional: remove collapse button */
+.ol-overviewmap button {
+  display: none;
+}
