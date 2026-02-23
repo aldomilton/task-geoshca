@@ -1,3 +1,4 @@
+
 import { useEffect, useRef, useState } from "react";
 import Map from "ol/Map";
 import View from "ol/View";
@@ -25,45 +26,61 @@ interface Props {
 }
 
 export default function Mapviewer({ setMap }: Props) {
+
+  // Store map instance (prevents re-creation on re-render)
   const mapRef = useRef<Map | null>(null);
+
+  // Store active drawing interaction
   const drawRef = useRef<Draw | null>(null);
+
+  // Vector source stores all drawn features
   const vectorSource = useRef(new VectorSource());
 
+  // State for measurement display
   const [lengthValue, setLengthValue] = useState("0 km");
   const [areaValue, setAreaValue] = useState("0 km²");
 
   useEffect(() => {
+    // Prevent map from initializing multiple times
     if (mapRef.current) return;
 
+    // Base OSM Layer (OpenStreetMap tiles)
     const baseLayer = new TileLayer({
       source: new OSM(),
     });
 
-    // 🧹 removed the default WMS layer (clean map startup)
+    // Vector layer for drawing features
     const vectorLayer = new VectorLayer({
       source: vectorSource.current,
     });
 
+    // Overview mini map control
     const overview = new OverviewMap({
       layers: [new TileLayer({ source: new OSM() })],
       collapsed: false,
       collapsible: false,
     });
 
+    // Create OpenLayers Map
     const map = new Map({
-      target: "map",
+      target: "map", // Attach map to div id="map"
       layers: [baseLayer, vectorLayer],
       controls: defaultControls().extend([overview]),
       view: new View({
-        center: fromLonLat([79.266, 17.057]),
+        center: fromLonLat([79.266, 17.057]), // Convert lon/lat to WebMercator
         zoom: 10,
       }),
     });
 
+    // Store map reference
     mapRef.current = map;
+
+    // Send map to parent (App.tsx)
     setMap(map);
+
   }, [setMap]);
 
+  // Remove existing drawing interaction
   const stopDrawing = () => {
     if (drawRef.current && mapRef.current) {
       mapRef.current.removeInteraction(drawRef.current);
@@ -71,12 +88,14 @@ export default function Mapviewer({ setMap }: Props) {
     }
   };
 
+  // Clear all drawn features
   const clearMap = () => {
     vectorSource.current.clear();
     setLengthValue("0 km");
     setAreaValue("0 km²");
   };
 
+  // Draw Line and calculate  length
   const drawLine = () => {
     stopDrawing();
 
@@ -87,12 +106,15 @@ export default function Mapviewer({ setMap }: Props) {
 
     draw.on("drawend", (evt) => {
       const geometry = evt.feature.getGeometry() as LineString;
+
+      // Calculate length on Earth surface
       const length = getLength(geometry);
       const lengthKm = (length / 1000).toFixed(2) + " km";
 
       setLengthValue(lengthKm);
       setAreaValue("0 km²");
 
+      // Apply style and label
       evt.feature.setStyle(
         new Style({
           stroke: new Stroke({ color: "blue", width: 3 }),
@@ -110,6 +132,7 @@ export default function Mapviewer({ setMap }: Props) {
     drawRef.current = draw;
   };
 
+  // Draw Polygon and calculate area
   const drawPolygon = () => {
     stopDrawing();
 
@@ -120,6 +143,8 @@ export default function Mapviewer({ setMap }: Props) {
 
     draw.on("drawend", (evt) => {
       const geometry = evt.feature.getGeometry() as Polygon;
+
+      // Calculate area on Earth surface
       const area = getArea(geometry);
       const areaKm = (area / 1000000).toFixed(2) + " km²";
 
@@ -144,6 +169,7 @@ export default function Mapviewer({ setMap }: Props) {
     drawRef.current = draw;
   };
 
+  // Draw Point and display coordinates
   const drawPoint = () => {
     stopDrawing();
 
@@ -154,7 +180,10 @@ export default function Mapviewer({ setMap }: Props) {
 
     draw.on("drawend", (evt) => {
       const geometry = evt.feature.getGeometry() as Point;
+
       const coords = geometry.getCoordinates();
+
+      // Convert  to Lon/Lat
       const lonLat = toLonLat(coords);
 
       evt.feature.setStyle([
@@ -182,6 +211,8 @@ export default function Mapviewer({ setMap }: Props) {
 
   return (
     <div style={{ position: "relative", height: "100%" }}>
+
+      {/* Measurement Control Panel */}
       <div
         style={{
           position: "absolute",
@@ -207,11 +238,15 @@ export default function Mapviewer({ setMap }: Props) {
           <button style={buttonStyle} onClick={clearMap}>Clear</button>
         </div>
       </div>
+
+      {/* Map Container */}
       <div id="map" style={{ width: "100%", height: "100%" }}></div>
+
     </div>
   );
 }
 
+// Reusable button styling
 const buttonStyle: React.CSSProperties = {
   backgroundColor: "green",
   color: "white",
