@@ -67,7 +67,7 @@ export default function Mapviewer({ setMap }: Props) {
       layers: [baseLayer, vectorLayer],
       controls: defaultControls().extend([overview]),
       view: new View({
-        center: fromLonLat([79.266, 17.057]), // Convert lon/lat to WebMercator
+        center: fromLonLat([79.266, 17.057]), 
         zoom: 10,
       }),
     });

@@ -1,16 +1,8 @@
-// Bookmark Component
-// -------------------------------------------------------------
-// Responsibilities:
-// 1. Save current map view (center + zoom)
-// 2. Store bookmarks in local state
-// 3. Display list of saved bookmarks
-// 4. Animate map to selected bookmark location
-// -------------------------------------------------------------
 
-import { Map } from "ol"; // OpenLayers Map type
+import { Map } from "ol"; 
 import { useState } from "react";
 
-// Props definition
+
 interface BookMarkProps {
   olMapview: Map | null; 
   // Map instance received from LeftPanel
@@ -19,9 +11,9 @@ interface BookMarkProps {
 
 // Bookmark data structure
 interface BookmarkType {
-  name: string;     // User-given bookmark name
-  center: number[]; // Map center coordinates
-  zoom: number;     // Map zoom level
+  name: string;     
+  center: number[];
+  zoom: number;     
 }
 
 function BookMark({ olMapview }: BookMarkProps) {
@@ -38,13 +30,13 @@ function BookMark({ olMapview }: BookMarkProps) {
     // Safety check: map must exist and name must not be empty
     if (!olMapview || !bookmarkName) return;
 
-    // Get current map view
+    // current map view
     const view = olMapview.getView();
 
-    // Get current center coordinates
+    // current center coordinates
     const center = view.getCenter() || [0, 0];
 
-    // Get current zoom level
+    // current zoom level
     const zoom = view.getZoom() || 0;
 
     // Create new bookmark object
@@ -54,10 +46,10 @@ function BookMark({ olMapview }: BookMarkProps) {
       zoom,
     };
 
-    // Add bookmark to state (spread operator keeps old bookmarks)
+    // Add bookmark to state
     setBookmarks([...bookmarks, newBookmark]);
 
-    // Clear input field after saving
+    
     setBookmarkName("");
   };
 
@@ -77,10 +69,6 @@ function BookMark({ olMapview }: BookMarkProps) {
   return (
     <div>
 
-      {/* ============================ */}
-      {/* INPUT SECTION */}
-      {/* ============================ */}
-
       <div style={{ display: "flex", gap: "5px" }}>
 
         {/* Input for bookmark name */}
@@ -88,7 +76,6 @@ function BookMark({ olMapview }: BookMarkProps) {
           type="text"
           value={bookmarkName}
           onChange={(e) => setBookmarkName(e.target.value)} 
-          // Update state when user types
           placeholder="Bookmark Name"
           style={{
             flex: 1,

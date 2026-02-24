@@ -1,19 +1,9 @@
-// WMSLayerControl Component
-// ------------------------------------------------------------
-// Responsibilities:
-// 1. Add/Remove a specific WMS layer to the map
-// 2. Control layer visibility (checkbox)
-// 3. Control layer opacity (slider)
-// 4. Automatically generate and display legend
-// 5. Manage layer state safely
-// ------------------------------------------------------------
 
 import { useState } from "react";
 import TileWMS from "ol/source/TileWMS"; // WMS source connection
 import TileLayer from "ol/layer/Tile";   // Tile layer for map
 import { Map } from "ol";                // OpenLayers Map type
 
-// Props definition
 interface WMSLayerControlProps {
   map: Map;           // OpenLayers map instance
   layerName: string;  // WMS Layer name (workspace:layer format)
@@ -40,17 +30,17 @@ function WMSLayerControl({ map, layerName, wmsUrl }: WMSLayerControlProps) {
       // Create new WMS Tile Layer
       const newLayer = new TileLayer({
         source: new TileWMS({
-          url: wmsUrl,  // WMS Server URL
+          url: wmsUrl,  
           params: {
-            LAYERS: layerName,      // Specify which layer to render
-            VERSION: "1.1.1",       // WMS Version
-            FORMAT: "image/png",    // Image format
-            TRANSPARENT: true,      // Allow transparency
+            LAYERS: layerName,                                      // Specify which layer to render
+            VERSION: "1.1.1",      
+            FORMAT: "image/png",    
+            TRANSPARENT: true,      
           },
-          serverType: "geoserver",  // Optimized for GeoServer
-          crossOrigin: "anonymous", // Avoid CORS issues
+          serverType: "geoserver",  
+          crossOrigin: "anonymous",                                          // Avoid CORS issues
         }),
-        opacity: 1, // Default full opacity
+        opacity: 1,                                                       // Default full opacity
       });
 
       // Add layer to map
@@ -66,8 +56,7 @@ function WMSLayerControl({ map, layerName, wmsUrl }: WMSLayerControlProps) {
       setLegendUrl(legendGraphicUrl);
 
     } else {
-      // If layer already exists → Remove it
-      if (layer) {
+      if (layer) {                                           // If layer already exists Remove it
         map.removeLayer(layer);
       }
 
@@ -83,9 +72,9 @@ function WMSLayerControl({ map, layerName, wmsUrl }: WMSLayerControlProps) {
   const handleOpacity = (value: number) => {
     if (layer) {
       layer.setOpacity(value); 
-      // Dynamically update transparency
-    }
-  };
+      
+    }                                                           
+  };                                                           // Dynamically update transparency 
 
   return (
     <div

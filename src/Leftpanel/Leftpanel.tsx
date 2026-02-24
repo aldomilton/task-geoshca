@@ -23,18 +23,9 @@ function LeftPanel({ olmapview }: LeftPanelProps) {
 
   return (
     <div style={{ width: "300px", padding: "10px" }}>
-      <Bookmark olMapview={olmapview} />                     //  Pass map to Bookmark component 
+      <Bookmark olMapview={olmapview} />                      
 
       <LoadLayers olmapview={olmapview} />
-
- {/* 
-        Below are predefined layers.
-        Each WMSLayerControl:
-        - Adds WMS layer to map
-        - Provides checkbox toggle
-        - Provides opacity slider
-        - Shows legend automatically
-      */}
 
       <WMSLayerControl
         map={olmapview}

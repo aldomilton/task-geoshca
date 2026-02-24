@@ -1,13 +1,3 @@
-// LoadLayers Component
-// ------------------------------------------------------------
-// Responsibilities:
-// 1. Accept WMS URL from user
-// 2. Send GetCapabilities request to WMS server
-// 3. Parse XML response using OpenLayers parser
-// 4. Extract available layer names
-// 5. Render WMSLayerControl dynamically for each layer
-// ------------------------------------------------------------
-
 import { useState } from "react";
 import WMSCapabilities from "ol/format/WMSCapabilities"; 
 // OpenLayers parser for WMS GetCapabilities XML
@@ -69,8 +59,8 @@ function LoadLayer({ olmapview }: LoadLayerProps) {
       // result.Capability.Layer. this Layer contains actual layer list
       const layernames =
         result?.Capability?.Layer?.Layer
-          ?.map((layer: any) => layer.Name) // Extract Name property
-          .filter(Boolean) || []; // Remove undefined
+          ?.map((layer: any) => layer.Name) 
+          .filter(Boolean) || []; 
 
       // Store layer names in state
       setLayersList(layernames);
@@ -87,7 +77,6 @@ function LoadLayer({ olmapview }: LoadLayerProps) {
         placeholder="Enter WMS URL"
         value={url}
         onChange={(e) => setUrl(e.target.value)} 
-        // Updates URL state when user types
         style={{ width: "100%" }}
       />
 
@@ -98,21 +87,17 @@ function LoadLayer({ olmapview }: LoadLayerProps) {
       >
         Load Layers
       </button>
-
-      {/* DYNAMIC LAYER LIST SECTION */}
       
+
       {/* Render layer controls only if layers exist */}
       {layersList.length > 0 && (
         <div style={{ marginTop: "10px" }}>
           {layersList.map((layerName, index) => (
             <WMSLayerControl
               key={index}
-              map={olmapview} 
-              // Pass OpenLayers map instance
+              map={olmapview}
               layerName={layerName} 
-              // Pass individual layer name
               wmsUrl={url} 
-              // Pass WMS server URL
             />
           ))}
         </div>

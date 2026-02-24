@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Map from "ol/Map"; // OpenLayers Map type
+import Map from "ol/Map"; 
 import Mapviewer from "./components/Mapviewer/Mapviewer";
 import LeftPanel from "./Leftpanel/Leftpanel";
 
